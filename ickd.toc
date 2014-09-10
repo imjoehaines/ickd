@@ -1,0 +1,8 @@
+## Interface: 50400
+## Author: Infected Mushroom
+## Title: ickd
+## Version: 1.2
+## Notes: A simple to do list
+## SavedVariablesPerCharacter: ickdToDoTasks
+
+main.lua
