@@ -15,7 +15,6 @@ Future things:
       2b. 2x Flask of Falling Leaves
 
 ]]
-
 local colour1, colour2 = "ffFF9900", "ffFFCC33"
 
 local function listTasks()
@@ -34,7 +33,7 @@ local function addTask(task)
 	if task == nil or task == "" then
 		print("|c"..colour2.."Oops|r! You didn't give a task, please try again.")
 	else
-		print("|c"..colour1.."ickd:|r Added \"|c"..colour2.."" .. task .. "|r\" to your to do list!")
+		print("|c"..colour1.."ickd:|r Added \"|c"..colour2..task.."|r\" to your to do list!")
 		table.insert(ickdToDoTasks, task)
 	end
 end
@@ -48,8 +47,10 @@ local function remTask(task)
 			print("|c"..colour1.."ickd:|r |c"..colour2.."Oops|r! You need to give the number of the task to remove, please try again.")
 		elseif task == nil or task == "" or task <= 0 then
 			print("|c"..colour1.."ickd:|r |c"..colour2.."Oops|r! You didn't give a task, please try again.")
+    elseif not ickdToDoTasks[task] then
+      print("|c"..colour1.."ickd:|r |c"..colour2.."Oops|r! There's no task number \"|c"..colour2..task.."|r\", please try again.")
 		else
-			print("|c"..colour1.."ickd:|r Removed \"|c"..colour2.."" .. ickdToDoTasks[task] .. "|r\" from your to do list!")
+			print("|c"..colour1.."ickd:|r Removed \"|c"..colour2..ickdToDoTasks[task].."|r\" from your to do list!")
 			table.remove(ickdToDoTasks, task)
 		end
 	end
@@ -69,7 +70,7 @@ local function editTask(stuff)
     elseif edit == nil or edit == "" then
       print("|c"..colour1.."ickd:|r |c"..colour2.."Oops|r! You didn't give an edit to the task, please try again.")
     else
-      print("|c"..colour1.."ickd:|r Edited task \"|c"..colour2.."" .. task .. "|r\" to \"|c"..colour2.."" .. edit .. "|r\"!")
+      print("|c"..colour1.."ickd:|r Edited task \"|c"..colour2..task.."|r\" to \"|c"..colour2..edit.."|r\"!")
       table.remove(ickdToDoTasks, task)
       table.insert(ickdToDoTasks, task, edit)
     end
