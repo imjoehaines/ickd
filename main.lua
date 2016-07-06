@@ -23,28 +23,28 @@ end
 
 local function addTask (task)
   if task == nil or task == '' then
-    print(oops('You didn\'t give a task, please try again.'))
-  else
-    print(ickd('Added "|c' .. colour2 .. task .. '|r" to your to do list!'))
-    table.insert(ickdToDoTasks, task)
+    return print(oops('You didn\'t give a task, please try again.'))
   end
+
+  print(ickd('Added "|c' .. colour2 .. task .. '|r" to your to do list!'))
+  table.insert(ickdToDoTasks, task)
 end
 
 local function removeTask (task)
   if #ickdToDoTasks == 0 then
-    print(ickd(oops('There aren\'t any tasks on your to do list!')))
+    return print(ickd(oops('There aren\'t any tasks on your to do list!')))
+  end
+
+  task = tonumber(task)
+  if type(task) ~= 'number' then
+    print(ickd(oops('You need to give the number of the task to remove, please try again.')))
+  elseif task == nil or task == '' or task <= 0 then
+    print(ickd(oops('You didn\'t give a task, please try again.')))
+  elseif not ickdToDoTasks[task] then
+    print(ickd(oops('There\'s no task number "|c' .. colour2 .. task .. '|r", please try again.')))
   else
-    task = tonumber(task)
-    if type(task) ~= 'number' then
-      print(ickd(oops('You need to give the number of the task to remove, please try again.')))
-    elseif task == nil or task == '' or task <= 0 then
-      print(ickd(oops('You didn\'t give a task, please try again.')))
-    elseif not ickdToDoTasks[task] then
-      print(ickd(oops('There\'s no task number "|c' .. colour2 .. task .. '|r", please try again.')))
-    else
-      print(ickd('Removed "|c' .. colour2 .. ickdToDoTasks[task] .. '|r" from your to do list!'))
-      table.remove(ickdToDoTasks, task)
-    end
+    print(ickd('Removed "|c' .. colour2 .. ickdToDoTasks[task] .. '|r" from your to do list!'))
+    table.remove(ickdToDoTasks, task)
   end
 end
 
@@ -52,22 +52,21 @@ local function editTask (stuff)
   local task, edit = stuff:match('^(%S*)%s*(.-)$')
 
   if #ickdToDoTasks == 0 then
-    print(ickd(oops('There aren\'t any tasks on your to do list!')))
-  else
-    task = tonumber(task)
-    if type(task) ~= 'number' then
-      print(ickd(oops('You need to give the number of the task to edit, please try again.')))
-    elseif task == nil or task == '' or task <= 0 then
-      print(ickd(oops('You didn\'t give a task, please try again.')))
-    elseif edit == nil or edit == '' then
-      print(ickd(oops('You didn\'t give an edit to the task, please try again.')))
-    else
-      print(ickd('Edited task "|c' .. colour2 .. task .. '|r" to "|c' .. colour2 .. edit .. '|r"!'))
-      table.remove(ickdToDoTasks, task)
-      table.insert(ickdToDoTasks, task, edit)
-    end
+    return print(ickd(oops('There aren\'t any tasks on your to do list!')))
   end
 
+  task = tonumber(task)
+  if type(task) ~= 'number' then
+    return print(ickd(oops('You need to give the number of the task to edit, please try again.')))
+  elseif task == nil or task == '' or task <= 0 then
+    return print(ickd(oops('You didn\'t give a task, please try again.')))
+  elseif edit == nil or edit == '' then
+    return print(ickd(oops('You didn\'t give an edit to the task, please try again.')))
+  end
+
+  print(ickd('Edited task "|c' .. colour2 .. task .. '|r" to "|c' .. colour2 .. edit .. '|r"!'))
+  table.remove(ickdToDoTasks, task)
+  table.insert(ickdToDoTasks, task, edit)
 end
 
 local function clearList ()
@@ -92,20 +91,20 @@ function SlashCmdList.ickd (msg)
   command = strlower(command)
 
   if command == 'help' or command =='h' then
-    help()
+    return help()
   elseif command == '' or command == 'list' or command == 'l' then
-    listTasks()
+    return listTasks()
   elseif command == 'add' or command == 'a' then
-    addTask(rest)
+    return addTask(rest)
   elseif command == 'rem' or command == 'remove' or command == 'r' or command == 'del' or command == 'delete' or command == 'd' then
-    removeTask(rest)
+    return removeTask(rest)
   elseif command == 'edit' or command == 'e' then
-    editTask(rest)
+    return editTask(rest)
   elseif command == 'clear' then
-    clearList()
-  else
-    print(ickd(oops('The command "' .. msg .. '" was not recognised')))
+    return clearList()
   end
+
+  print(ickd(oops('The command "' .. msg .. '" was not recognised')))
 end
 
 local f = CreateFrame('Frame')
