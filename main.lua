@@ -36,16 +36,17 @@ local function removeTask (task)
   end
 
   task = tonumber(task)
+
   if type(task) ~= 'number' then
-    print(ickd(oops('You need to give the number of the task to remove, please try again.')))
+    return print(ickd(oops('You need to give the number of the task to remove, please try again.')))
   elseif task == nil or task == '' or task <= 0 then
-    print(ickd(oops('You didn\'t give a task, please try again.')))
+    return print(ickd(oops('You didn\'t give a task, please try again.')))
   elseif not ickdToDoTasks[task] then
-    print(ickd(oops('There\'s no task number "|c' .. colour2 .. task .. '|r", please try again.')))
-  else
-    print(ickd('Removed "|c' .. colour2 .. ickdToDoTasks[task] .. '|r" from your to do list!'))
-    table.remove(ickdToDoTasks, task)
+    return print(ickd(oops('There\'s no task number "|c' .. colour2 .. task .. '|r", please try again.')))
   end
+
+  print(ickd('Removed "|c' .. colour2 .. ickdToDoTasks[task] .. '|r" from your to do list!'))
+  table.remove(ickdToDoTasks, task)
 end
 
 local function editTask (stuff)
@@ -85,23 +86,24 @@ local function help ()
   print('All commands will work with just their first letter (eg. |c' .. colour2 .. 'a|r = |c' .. colour2 .. 'add|r)')
 end
 
+-- we could do some metatable magic or dynamically alias each of these
+-- but I think the explicitness is nicer, even if it looks a bit odd
+local commandMap = {
+  help = help, h = help,
+  list = listTasks, l = listTasks,
+  add = addTask, a = addTask,
+  remove = removeTask, r = removeTask,
+  edit = editTask, e = editTask,
+  clear = clearList, c = clearList
+}
+
 SLASH_ickd1, SLASH_ickd2 = '/td', '/ickd'
 function SlashCmdList.ickd (msg)
   local command, rest = msg:match('^(%S*)%s*(.-)$')
   command = strlower(command)
 
-  if command == 'help' or command =='h' then
-    return help()
-  elseif command == '' or command == 'list' or command == 'l' then
-    return listTasks()
-  elseif command == 'add' or command == 'a' then
-    return addTask(rest)
-  elseif command == 'rem' or command == 'remove' or command == 'r' or command == 'del' or command == 'delete' or command == 'd' then
-    return removeTask(rest)
-  elseif command == 'edit' or command == 'e' then
-    return editTask(rest)
-  elseif command == 'clear' then
-    return clearList()
+  if commandMap[command] then
+    return commandMap[command](rest)
   end
 
   print(ickd(oops('The command "' .. msg .. '" was not recognised')))
